@@ -4,7 +4,7 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Copy backend-server files
-COPY backend-server/ .
+COPY dj_backend_server/ .
 
 # Install dependencies
 RUN pip install -r requirements.txt

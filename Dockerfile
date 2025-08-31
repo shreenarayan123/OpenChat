@@ -15,5 +15,5 @@ RUN pip install psycopg2-binary
 # Expose port
 EXPOSE 8000
 
-# Start command
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Start command - bind to PORT env variable for Render
+CMD ["sh", "-c", "python manage.py runserver 0.0.0.0:${PORT:-8000}"]

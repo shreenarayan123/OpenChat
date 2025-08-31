@@ -1,0 +1,14 @@
+.DS_Store
+.aider.*
+.aider.conf.yml
+dj_backend_server/nginx/ssl/privkey.pem
+dj_backend_server/nginx/ssl/cert.pem
+dj_backend_server/nginx/nginx.conf
+.vscode
+dj_backend_server.code-workspace
+.aider*
+.aiderignore
+dj_backend_server/.vscode/settings.json
+
+dj_backend_server/a.py
+dj_backend_server/1.pdf

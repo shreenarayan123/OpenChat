@@ -17,9 +17,13 @@
     /* Linting */
     "strict": true,
     "noUnusedLocals": false,
-    "noUnusedParameters": true,
+    "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
     
+    /* Additional settings for better compatibility */
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

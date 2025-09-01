@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom/client";
-import css from "./index.css?inline";
+import "./index.css";
 import App from "./App.tsx";
 
 const initilizeChatBot = ({
@@ -11,10 +11,6 @@ const initilizeChatBot = ({
   token?: string;
   initiatorId?:string
 }) => {
-  const styleElement = document.createElement("style");
-  styleElement.innerHTML = css;
-  document.body.appendChild(styleElement);
-
   const container = document.createElement("div");
   container.id = "chat-modal-container";
   document.body.appendChild(container);

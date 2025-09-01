@@ -1,7 +1,7 @@
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import remarkGfm from "remark-gfm";
-import { duotoneDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { duotoneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 export default function Markdown({ content }: { content: string }) {
   return (
@@ -15,15 +15,10 @@ export default function Markdown({ content }: { content: string }) {
           const match = /language-(\w+)/.exec(className || "");
           return !inline && match ? (
             <SyntaxHighlighter
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              style={duotoneDark}
+              style={duotoneDark as any}
               children={String(children).replace(/\n$/, "")}
               language={match[1]}
-              CodeTag={"code"}
-              codeTagProps={{
-                className: "ch-my-2",
-              }}
+              PreTag="div"
               {...props}
             />
           ) : (

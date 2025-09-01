@@ -34,5 +34,36 @@ elif grep -q 'n.get("/chat/init")' "$CHAT_JS_FILE"; then
   sed -i "s|n.get(\"/chat/init\")|n.get(\"${APP_URL}/api/chat/init\")|g" "$CHAT_JS_FILE"
 fi
 
-# Start your app normally
-exec "$@"
+# Wait for database to be ready (simplified for Render PostgreSQL)
+echo "Checking database connection..."
+python -c "
+import django
+import os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dj_backend_server.settings')
+django.setup()
+from django.db import connections
+from django.core.management.color import no_style
+from django.db.utils import ConnectionHandler
+
+try:
+    db_conn = connections['default']
+    db_conn.cursor()
+    print('Database connection successful!')
+except Exception as e:
+    print(f'Database connection failed: {e}')
+    exit(1)
+"
+
+# Run migrations
+echo "Running database migrations..."
+python manage.py makemigrations
+python manage.py migrate
+
+# Sync models (if this is a custom command)
+echo "Syncing models..."
+python manage.py sync_models || echo "sync_models command not found, skipping..."
+
+# Start Django server on the port specified by Render (or default to 8000)
+PORT=${PORT:-8000}
+echo "Starting Django server on 0.0.0.0:$PORT"
+python manage.py runserver 0.0.0.0:$PORT

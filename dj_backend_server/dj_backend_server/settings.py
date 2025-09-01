@@ -198,16 +198,46 @@ LOCALE_PATHS = [
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://redis:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://redis:6379/0")
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": os.environ.get("DATABASE_NAME", "openchat"),
-        "USER": os.environ.get("DATABASE_USER", "dbuser"),
-        "PASSWORD": os.environ.get("DATABASE_PASSWORD", "dbpass"),
-        "HOST": os.environ.get("DATABASE_HOST", "mysql"),
-        "PORT": os.environ.get("DATABASE_PORT", "3306"),
+# Database configuration for Render PostgreSQL
+import dj_database_url
+
+# Use DATABASE_URL if available (Render's managed PostgreSQL)
+if os.environ.get("DATABASE_URL"):
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=os.environ.get("DATABASE_URL"),
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
-}
+else:
+    # Fallback configuration using individual environment variables
+    DATABASE_ENGINE = os.environ.get("DATABASE_ENGINE", "postgresql")
+
+    if DATABASE_ENGINE == "postgresql":
+        DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.postgresql",
+                "NAME": os.environ.get("DATABASE_NAME", "openchat"),
+                "USER": os.environ.get("DATABASE_USER", "dbuser"),
+                "PASSWORD": os.environ.get("DATABASE_PASSWORD", "dbpass"),
+                "HOST": os.environ.get("DATABASE_HOST", "localhost"),
+                "PORT": os.environ.get("DATABASE_PORT", "5432"),
+                "OPTIONS": {
+                    "sslmode": "require",
+                },
+                "CONN_MAX_AGE": 60,
+                "ATOMIC_REQUESTS": True,
+            }
+        }
+    else:
+        # Fallback to SQLite for development
+        DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.sqlite3",
+                "NAME": BASE_DIR / "db.sqlite3",
+            }
+        }
 
 SESSION_ENGINE = (
     "django.contrib.sessions.backends.db"  # You can choose other engines as well

@@ -20,7 +20,7 @@
     "react-dom": "^18.2.0",
     "react-hotkeys-hook": "^4.4.0",
     "react-icons": "^4.9.0",
-    "react-loader-spinner": "^5.3.4",
+    "react-loader-spinner": "^6.1.6",
     "react-markdown": "^8.0.7",
     "react-syntax-highlighter": "^15.5.0",
     "react-textarea-autosize": "^8.5.9",

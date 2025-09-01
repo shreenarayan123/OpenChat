@@ -3,12 +3,12 @@ import * as Dialog from "@radix-ui/react-dialog";
 import ModalTrigger from "./components/ModalTrigger";
 import Message from "./components/Message";
 import { instance } from "./utils/axios_instance";
-import TextareaAutosize from "react-autosize-textarea";
 import { AiOutlineArrowUp } from "react-icons/ai";
 import { useHotkeys } from "react-hotkeys-hook";
 import { Grid } from "react-loader-spinner";
 import { GrRotateLeft } from "react-icons/gr";
 import { useBoolean } from "./hooks/useBoolean";
+import TextareaAutosize from "react-textarea-autosize";
 
 type Message = {
   timestamp: Date | number;
@@ -83,6 +83,8 @@ export default function App({
       scrollDown();
     }
   }, [loading]);
+
+  
   const handleSendMessage = async (message: string) => {
     if (message.trim() === "") return;
     const history = messages
@@ -133,7 +135,8 @@ export default function App({
   return (
     <Dialog.Root open={isOpen} onOpenChange={(open) => setOpen(open)}>
       {!initiatorId && <ModalTrigger onClick={open} isOpen={isOpen} />}
-      <Dialog.Portal className="!z-[10000000]">
+      <Dialog.Portal >
+        <div className="!z-[10000000]">
         <Dialog.Overlay className="ch-bg-black/50 !ch-z-[10000000] ch-font-manrope data-[state=open]:ch-animate-overlayShow ch-fixed ch-inset-0 ch-flex ch-items-start ch-justify-center ch-pt-10 pb-4 px-5">
           <Dialog.Content className="!ch-z-[100000000] data-[state=open]:ch-animate-contentShow ch-focus:outline-none ch-max-w-[95%] ch-max-h-full sm:ch-max-w-screen-md ch-w-full">
             <div className="ch-w-full ch-relative ch-rounded-lg ch-text-accent ch-p-4 ch-overflow-auto ch-flex ch-items-center ch-flex-col ch-max-h-[calc(100dvh-5rem)] ch-bg-bg ch-min-h-fit">
@@ -215,7 +218,6 @@ export default function App({
                           value={userInput}
                           maxRows={10}
                           className="ch-w-full focus:ch-outline-none ch-leading-7 placeholder:ch-leading-loose ch-text-accent placeholder:ch-text-sm ch-bg-transparent ch-text-lg ch-font-normal ch-p-1 ch-align-middle ch-min-h-full ch-outline-none"
-                          type="text"
                           placeholder="ask any question?"
                         />
                       </div>
@@ -251,7 +253,9 @@ export default function App({
             </div>
           </Dialog.Content>
         </Dialog.Overlay>
+        </div>
       </Dialog.Portal>
+      
     </Dialog.Root>
   );
 }

@@ -1,4 +1,4 @@
-import { LuStars } from "react-icons/lu";
+import { LuStar } from "react-icons/lu";
 import * as ReactToggle from "@radix-ui/react-toggle-group";
 import useCopyToClipboard from "../hooks/useClipboard";
 import { BsFillClipboardFill, BsFillClipboard2CheckFill } from "react-icons/bs";
@@ -87,7 +87,7 @@ export default function Message({
             <div className="avatar ch-hidden sm:ch-inline-flex">
               {bot ? (
                 <div className="ch-h-8 ch-bg-primary ch-w-8 ch-min-w-[32px] ch-flex-col ch-overflow-hidden ch-items-center ch-justify-center ch-rounded-lg ch-border ch-border-gray-500 ch-border-opacity-20 ch-flex sm:ch-h-8 sm:ch-w-8 sm:ch-min-w-[32px]">
-                  <LuStars />
+                  <LuStar />
                 </div>
               ) : (
                 <div className="ch-h-8 ch-w-8 ch-min-w-[32px] ch-flex-col ch-overflow-hidden ch-items-center ch-justify-center ch-rounded-lg ch-border ch-border-gray-500 ch-border-opacity-20 ch-flex sm:ch-h-8 sm:ch-w-8 sm:ch-min-w-[32px]">

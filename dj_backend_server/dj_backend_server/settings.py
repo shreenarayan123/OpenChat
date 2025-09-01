@@ -243,25 +243,73 @@ SESSION_ENGINE = (
     "django.contrib.sessions.backends.db"  # You can choose other engines as well
 )
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "0.0.0.0").split(",")
+# Configure ALLOWED_HOSTS for Render deployment
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+ALLOWED_HOSTS_ENV = os.environ.get("ALLOWED_HOSTS", "")
+
+# Build ALLOWED_HOSTS list
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]
+
+# Add Render hostname if available
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+# Add any additional hosts from environment variable
+if ALLOWED_HOSTS_ENV:
+    ALLOWED_HOSTS.extend([host.strip() for host in ALLOWED_HOSTS_ENV.split(",") if host.strip()])
+
+# Also add the specific domain we see in the error
+ALLOWED_HOSTS.append("openchat-jj0c.onrender.com")
+
 APP_URL = os.environ.get("APP_URL", "http://0.0.0.0:8000")
 
-CSRF_COOKIE_SECURE = True
-CSRF_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = True
-SESSION_COOKIE_HTTPONLY = True
-SECURE_SSL_REDIRECT = True
-SECURE_HSTS_SECONDS = 3600
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+# Security settings - conditional based on environment
+IS_PRODUCTION = os.environ.get("RENDER", False) or APP_URL.startswith("https://")
+
+if IS_PRODUCTION:
+    CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+    SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = 3600
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+else:
+    # Development settings
+    CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_SECURE = False
+    SECURE_SSL_REDIRECT = False
+
 CORS_ALLOW_CREDENTIALS = True
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-CORS_ALLOWED_ORIGINS = [APP_URL]
+# Configure frontend and LLM server URLs
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:4173")
+LLM_SERVER_URL = os.environ.get("LLM_SERVER_URL", "http://localhost:3000")
 
-CSRF_TRUSTED_ORIGINS = [APP_URL]
+# Update CORS and CSRF settings to include all necessary domains
+CORS_ALLOWED_ORIGINS = [APP_URL, FRONTEND_URL]
+if "openchat-jj0c.onrender.com" not in APP_URL:
+    CORS_ALLOWED_ORIGINS.append("https://openchat-jj0c.onrender.com")
 
-CORS_ORIGIN_WHITELIST = [APP_URL]
+# Add LLM server URL to CORS
+if LLM_SERVER_URL not in CORS_ALLOWED_ORIGINS:
+    CORS_ALLOWED_ORIGINS.append(LLM_SERVER_URL)
+
+CSRF_TRUSTED_ORIGINS = [APP_URL, FRONTEND_URL]
+if "openchat-jj0c.onrender.com" not in APP_URL:
+    CSRF_TRUSTED_ORIGINS.append("https://openchat-jj0c.onrender.com")
+
+# Allow all subdomains of onrender.com for easier deployment
+CORS_ALLOWED_ORIGINS.extend([
+    "https://*.onrender.com",
+])
+CSRF_TRUSTED_ORIGINS.extend([
+    "https://*.onrender.com",
+])
+
+CORS_ORIGIN_WHITELIST = CORS_ALLOWED_ORIGINS
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",

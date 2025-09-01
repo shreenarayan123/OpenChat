@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: openchat-frontend
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm run preview -- --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: openchat-backend
+          property: url
+      - key: VITE_LLM_URL
+        fromService:
+          type: web
+          name: openchat-llm-server
+          property: url

@@ -1,5 +1,5 @@
 {
-   "name": "openchat_search",
+  "name": "openchat_search",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -25,7 +25,9 @@
     "react-markdown": "^8.0.7",
     "react-syntax-highlighter": "^15.5.0",
     "react-textarea-autosize": "^8.5.9",
-    "remark-gfm": "^3.0.1"
+    "remark-gfm": "^3.0.1",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.4"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",
@@ -41,8 +43,6 @@
     "eslint-plugin-react-refresh": "^0.3.4",
     "postcss": "^8.4.24",
     "tailwind-scrollbar": "^3.0.4",
-    "tailwindcss": "^3.3.2",
-    "typescript": "^5.9.2",
-    "vite": "^4.4.0"
+    "tailwindcss": "^3.3.2"
   }
 }
